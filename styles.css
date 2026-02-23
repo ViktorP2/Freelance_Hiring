@@ -1,0 +1,38 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Segoe UI', sans-serif;
+}
+
+header {
+	background: #667eea;
+	color: #ffffff;
+	padding: 1rem;
+}
+
+nav {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.logo {
+	font-size: 1.8rem;
+	font-weight: 700;
+}
+
+.hero {
+	background: #667eea;
+	color: #ffffff;
+	padding: 4rem 2rem;
+	text-align: center;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 4rem auto;
+	padding: 0 2rem;
+}
