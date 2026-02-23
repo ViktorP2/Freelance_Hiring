@@ -10,7 +10,7 @@ body {
 
 header {
 	background: #667eea;
-	color: #ffffff;
+	color: #FAFAFA;
 	padding: 1rem;
 }
 
@@ -24,11 +24,63 @@ nav {
 	font-weight: 700;
 }
 
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: #FAFAFA;
+    text-decoration: none;
+}
+
+.auth-btns {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn{
+    background: #FAFAFA;
+    color: #667eea;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 .hero {
 	background: #667eea;
-	color: #ffffff;
+	color: #FAFAFA;
 	padding: 4rem 2rem;
 	text-align: center;
+}
+
+.hero p{
+    margin-bottom: 2rem;
+}
+
+.search-box{
+    max-width: 600px;
+    margin: 2rem auto;
+    display: flex;
+    gap: 1rem;
+}
+
+.search-input{
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: 5px;
+}
+
+.search-btn{
+    background: #FAFAFA;
+    color: #667eea;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .container {
