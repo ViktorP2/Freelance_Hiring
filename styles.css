@@ -88,3 +88,28 @@ nav {
 	margin: 4rem auto;
 	padding: 0 2rem;
 }
+
+.filters{
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filters-select{
+    padding: 0.5rem;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+}
+
+.jobs-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.job-card{
+    background: #FAFAFA;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
