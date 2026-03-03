@@ -27,6 +27,7 @@ const jobs = [{
     }
 ];
 
+// Render jobs to the page
 function renderJobs(jobsToShow) {
     const grid = document.getElementById('jobsGrid');
     grid.innerHTML = jobsToShow.map(job => `
@@ -47,6 +48,7 @@ function renderJobs(jobsToShow) {
 // initial render
 renderJobs(jobs);
 
+// Filter function
 function filterJobs() {
     const search = document.getElementById('search-input').value.toLowerCase();
     const category = document.getElementById('category-filter')?.value || 'All Categories';
@@ -68,3 +70,41 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('search-input').addEventListener('input', filterJobs);
     document.querySelector('.search-btn').addEventListener('click', filterJobs);
 });
+
+// Placeholder functions for login and apply actions
+function login(role){
+    alert(`Login as ${role} - This is a placeholder action.`);
+}
+
+function apply(jobId){
+    console.log('Applied to job ${jobId}');
+    alert('Application sent for job ${jobId}');
+}
+
+// Modal logic
+let selectedRole = 'freelancer';
+
+function openModal(){
+    document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal(){
+    document.getElementById('modalOverlay').classList.remove('active');
+}
+
+function setRole(role){
+    selectedRole = role;
+    document.getElementById('freelancerBtn').classList.toggle('active', role === 'freelancer');
+    document.getElementById('companyBtn').classList.toggle('active', role === 'company');
+}
+
+function handleLogin(){
+    event.preventDefault();
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passwordInput').value;
+    
+    if(email && password){
+        alert(`Logged in as ${selectedRole}: ${email}`);
+        closeModal();
+    }
+}
