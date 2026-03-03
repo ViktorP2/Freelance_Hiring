@@ -24,7 +24,7 @@
         <h1>Find Freelance Work</h1>
         <p>Discover and apply for freelance opportunities that match your skills.</p>
         <div class="search-box">
-            <input type="text" class="search-input" placeholder="Search for jobs...">
+            <input type="text" class="search-input" id="search-input" placeholder="Search for jobs...">
             <button class="search-btn">Search</button>
         </div>
     </section>
@@ -32,11 +32,13 @@
 
     <div class="container">
         <div class="filter">
-            <select class="filter-select">
+            <select class="filter-select" id="category-filter" onchange="filterJobs()">
                 <option>All Categories</option>
+                <option>Web development</option>
+                <option>Design</option>
             </select>
         </div>
-        <div class="jobs-grid" id="jobsGrid"></div>
+        <div class="jobs-grid" id="jobsGrid"><!-- Here is rendered jobs --></div>
     </div>
     
     <script src="script.js"></script>

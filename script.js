@@ -5,7 +5,8 @@ const jobs = [{
     desc: "Build web apps and APIs.",
     skills: ["JavaScript", "Node.js", "React"],
     salary: "$900 - $1700",
-    category: "Software Development"
+    category: "Software Development",
+    website: "https://techcorp.com/careers"
     },
     {
     id: 2,
@@ -26,9 +27,9 @@ const jobs = [{
     }
 ];
 
-function renderJobs() {
+function renderJobs(jobsToShow) {
     const grid = document.getElementById('jobsGrid');
-    grid.innerHTML = jobs.map(job => `
+    grid.innerHTML = jobsToShow.map(job => `
         <div class="job-card">
             <div class="job-company">${job.company}</div>
             <h3 class="job-title">${job.title}</h3>
@@ -37,9 +38,33 @@ function renderJobs() {
                 <span>Skills: ${job.skills.join(', ')}</span>
                 <p>Salary: ${job.salary}</p>
             </div>
+            <p class="website">${job.website || 'No website available'}</p>
             <button class="apply-btn">Apply Now</button>
         </div>
     `).join('');
 }
 
+// initial render
 renderJobs(jobs);
+
+function filterJobs() {
+    const search = document.getElementById('search-input').value.toLowerCase();
+    const category = document.getElementById('category-filter')?.value || 'All Categories';
+    
+    let filtered = jobs.filter(job => 
+        job.title.toLowerCase().includes(search) ||
+        job.company.toLowerCase().includes(search) ||
+        job.desc.toLowerCase().includes(search)
+    );
+
+    if (category !== 'All Categories') {
+        filtered = filtered.filter(job => job.category === category);
+    }
+
+    renderJobs(filtered);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('search-input').addEventListener('input', filterJobs);
+    document.querySelector('.search-btn').addEventListener('click', filterJobs);
+});
