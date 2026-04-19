@@ -85,11 +85,11 @@ function apply(jobId){
 let selectedRole = 'freelancer';
 
 function openModal(){
-    document.getElementById('modalOverlay').classList.add('active');
+    document.getElementById('modal-overlay').classList.add('active');
 }
 
 function closeModal(){
-    document.getElementById('modalOverlay').classList.remove('active');
+    document.getElementById('modal-overlay').classList.remove('active');
 }
 
 function setRole(role){
