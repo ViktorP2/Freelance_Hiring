@@ -124,13 +124,48 @@ function setLoginRole(role) {
     loginRole = role;
     document.getElementById("loginFreelancerBtn").classList.toggle("active", role === "freelancer");
     document.getElementById("loginCompanyBtn").classList.toggle("active", role === "company");
-    document.getElementById("loginAdminBtn").classList.toggle("active", role === "admin");
 }
 
 function setRegisterRole(role) {
     registerRole = role;
     document.getElementById("registerFreelancerBtn").classList.toggle("active", role === "freelancer");
     document.getElementById("registerCompanyBtn").classList.toggle("active", role === "company");
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("user");
+    renderNavbarProfile();
+    updateAdminPanel();
+    closeProfileModal();
+}
+
+function renderNavbarProfile() {
+    const authButtons = document.getElementById("authButtons");
+    const profileBox = document.getElementById("profileBox");
+
+    if (!authButtons || !profileBox) return;
+
+    if (currentUser) {
+        authButtons.classList.add("hidden");
+        profileBox.classList.remove("hidden");
+
+        profileBox.innerHTML = `
+            <div class="profile-mini">
+                <button type="button" class="profile-link" onclick="openProfileModal()">
+                    ${currentUser.name || "Profile"}
+                </button>
+                <button type="button" class="btn secondary-btn logout-btn" onclick="logout()">
+                    Logout
+                </button>
+            </div>
+        `;
+    } else {
+        authButtons.classList.remove("hidden");
+        profileBox.classList.add("hidden");
+        profileBox.innerHTML = "";
+    }
 }
 
 function handleLogin(event) {
@@ -144,17 +179,29 @@ function handleLogin(event) {
         return;
     }
 
+    const savedUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+    const matchedUser = savedUsers.find(user => user.email === email);
+
+    if (!matchedUser) {
+        alert("User not found. Please register first.");
+        return;
+    }
+
     currentUser = {
-        email,
-        role: loginRole
+        email: matchedUser.email,
+        role: matchedUser.role,
+        name: matchedUser.name
     };
 
-    alert(`Logged in as ${loginRole}: ${email}`);
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+    alert(`Logged in as ${currentUser.name}`);
     closeLoginModal();
+    renderNavbarProfile();
     updateAdminPanel();
 }
 
-function handleRegister(event) {
+async function handleRegister(event) {
     event.preventDefault();
 
     const name = document.getElementById("registerNameInput").value.trim();
@@ -166,28 +213,104 @@ function handleRegister(event) {
         return;
     }
 
-    alert(`${registerRole} account created successfully for ${name}`);
-    closeRegisterModal();
-    openLoginModal();
+    const payload = {
+        email,
+        password,
+        role: registerRole
+    };
+
+    if (registerRole === "freelancer") {
+        payload.fullName = name;
+    }
+
+    if (registerRole === "company") {
+        payload.companyName = name;
+    }
+
+    try {
+        const response = await fetch("http://127.0.0.1:3000/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Registration failed");
+        }
+
+        const savedUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+        const alreadyExists = savedUsers.some(user => user.email === email);
+
+        if (!alreadyExists) {
+            savedUsers.push({
+                email,
+                name,
+                role: registerRole
+            });
+
+            localStorage.setItem("registeredUsers", JSON.stringify(savedUsers));
+        }
+
+        alert(data.message || "Registered successfully");
+        closeRegisterModal();
+        openLoginModal();
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function openProfileModal() {
+    if (!currentUser) return;
+
+    const profileModalContent = document.getElementById("profileModalContent");
+    const profileAdminPanel = document.getElementById("profileAdminPanel");
+
+    if (!profileModalContent || !profileAdminPanel) return;
+
+    profileModalContent.innerHTML = `
+        <div class="profile-details">
+            <p><strong>Name:</strong> ${currentUser.name || "Not available"}</p>
+            <p><strong>Email:</strong> ${currentUser.email || "Not available"}</p>
+            <p><strong>Role:</strong> ${currentUser.role || "Not available"}</p>
+        </div>
+    `;
+
+    if (["freelancer", "company"].includes(currentUser.role)) {
+        profileAdminPanel.classList.remove("hidden");
+
+        const companyInput = document.getElementById("adminCompany");
+        if (companyInput && currentUser.name) {
+            companyInput.value = currentUser.name;
+        }
+        } else {
+        profileAdminPanel.classList.add("hidden");
+    }
+
+    document.getElementById("profile-modal-overlay").classList.add("active");
+}
+
+function closeProfileModal() {
+    const overlay = document.getElementById("profile-modal-overlay");
+    if (overlay) {
+        overlay.classList.remove("active");
+    }
 }
 
 function updateAdminPanel() {
-    const adminPanel = document.getElementById("admin-panel");
-
-    if (currentUser && currentUser.role === "admin") {
-        adminPanel.classList.remove("hidden");
-    } else {
-        adminPanel.classList.add("hidden");
-    }
+    return;
 }
 
 function handleAddJob(event) {
     event.preventDefault();
 
-    if (!currentUser || currentUser.role !== "admin") {
-        alert("Only admins can add job listings.");
-        return;
-    }
+    if (!currentUser || !["freelancer", "company"].includes(currentUser.role)) {
+    alert("Only logged-in users can add job listings.");
+    return;
+}
 
     const company = document.getElementById("adminCompany").value.trim();
     const title = document.getElementById("adminTitle").value.trim();
@@ -221,6 +344,15 @@ function handleAddJob(event) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    const savedUser = localStorage.getItem("currentUser");
+
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+    }
+
     renderJobs(jobs);
+    renderNavbarProfile();
+    updateAdminPanel();
+
     document.getElementById("search-input").addEventListener("input", filterJobs);
 });

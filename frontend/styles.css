@@ -4,6 +4,14 @@
     box-sizing: border-box;
 }
 
+button,
+a,
+input,
+select,
+textarea {
+    -webkit-tap-highlight-color: transparent;
+}
+
 body {
     font-family: 'Segoe UI', sans-serif;
     background: #f7f8fc;
@@ -194,6 +202,19 @@ footer {
     margin-top: 4rem;
 }
 
+#profileModalContent {
+    margin-top: 1rem;
+}
+
+#profileAdminPanel {
+    margin-top: 2rem;
+}
+
+#profile-modal-overlay .modal {
+    width: min(95vw, 960px);
+    max-width: 960px;
+}
+
 .modal-overlay {
     display: none;
     position: fixed;
@@ -205,6 +226,7 @@ footer {
     justify-content: center;
     align-items: center;
     padding: 1rem;
+    overflow-y: auto;
 }
 
 .modal-overlay.active {
@@ -214,9 +236,13 @@ footer {
 .modal {
     background: #FAFAFA;
     border-radius: 20px;
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 420px;
+    padding: 2rem;
+    width: min(95vw, 900px);
+    max-width: 900px;
+    height: auto;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
     animation: slideIn 0.3s ease;
@@ -347,6 +373,10 @@ footer {
     display: none;
 }
 
+#profileAdminPanel {
+    margin-top: 2rem;
+}
+
 .admin-panel {
     background: #FAFAFA;
     padding: 2rem;
@@ -383,13 +413,78 @@ footer {
     grid-column: 1 / -1;
 }
 
+#profileBox {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+#profileBox.hidden {
+    display: none;
+}
+
+.profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    min-width: auto;
+}
+
+.profile-link {
+    all: unset;
+    display: inline-block;
+    background: transparent;
+    border: none;
+    color: #FAFAFA;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.profile-link:hover {
+    text-decoration: underline;
+}
+
+.profile-link:focus-visible {
+    outline: 2px solid #FAFAFA;
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+.logout-btn {
+    width: auto;
+    margin-top: 0;
+    padding: 0.5rem 0.9rem;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.profile-details p {
+    font-size: 1rem;
+    color: #333333;
+}
+
 @media (max-width: 768px) {
     nav {
         justify-content: center;
     }
 
     .nav-links,
-    .auth-btns {
+    .auth-btns,
+    #profileBox {
         width: 100%;
         justify-content: center;
         margin-left: 0;
